@@ -5,4 +5,8 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+void init_shell();
+char **parse_args(char *line);
+
+
 #endif //SHELL_H
