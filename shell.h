@@ -16,6 +16,7 @@ void print_cwd();
 
 char *sh_read_line();
 char **sh_parse_line(char *input);
+int sh_run(char **input_args);
 
 
 #endif

@@ -20,6 +20,7 @@ void sh_loop() {
     print_cwd();
     line = sh_read_line();
     args = sh_parse_line(line);
+    status = sh_run(args);
   }
 }
 
@@ -52,4 +53,8 @@ char **sh_parse_line(char *input) {
     args[i] = strsep(&p," ");
   }
   return args;
+}
+
+int sh_run(char **input_args) {
+  return 1;
 }
