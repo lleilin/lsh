@@ -18,8 +18,8 @@ void sh_loop() {
 
   while(status) {
     print_cwd();
-    line = read_line();
-    args = split_line();
+    line = sh_read_line();
+    args = sh_split_line();
   }
 }
 
