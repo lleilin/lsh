@@ -15,7 +15,7 @@ void sh_loop();
 void print_cwd();
 
 char *sh_read_line();
-char **sh_split_line()
+char **sh_split_line(char *input);
 
 
 #endif
