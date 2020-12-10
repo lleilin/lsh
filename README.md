@@ -8,11 +8,11 @@ Due: TBD \
 Github Link: https://github.com/mks65/shell.git
 
 ## TODO
--[x] Print current directory
--[ ] Read one line at a time
--[ ] Fork and execute command
--[ ] Read and separate multiple commands on one line
--[ ] Implement simple redirection
+- Read one line at a time
+- Separate one line into multiple arguments
+- Fork and execute command
+- Read and separate multiple commands on one line
+- Implement simple redirection
 
 ## Features:
 
