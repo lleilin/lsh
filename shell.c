@@ -19,11 +19,7 @@ void sh_loop() {
   while(status) {
     print_cwd();
     line = sh_read_line();
-    args = sh_split_line(line);
-    int i;
-    for (i = 0; i < 3; i++) {
-      printf("%s\t", args[i]);
-    }
+    args = sh_parse_line(line);
   }
 }
 
@@ -45,17 +41,15 @@ char *sh_read_line() {
   return line;
 }
 
-char **sh_split_args(char *input) {
+char **sh_parse_line(char *input) {
   int n = strlen(input);
-  char **args = malloc(sizeof(char*));
+  char **args = malloc(8 * sizeof(char *));
   char *p = input;
   int i = 0;
-  args[i] = strsep(&p," ");
-
+  args[i]= strsep(&p," ");
   while (args[i]) {
     i++;
     args[i] = strsep(&p," ");
   }
-
   return args;
 }
