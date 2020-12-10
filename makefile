@@ -9,7 +9,10 @@ shell.o: shell.c shell.h
 main.o: main.c shell.h
 	gcc -c main.c
 
-.PHONY: all run clean
+.PHONY: all run clean memcheck
+
+memcheck:
+	valgrind --tool=memcheck --leak-check=yes ./main
 
 run:
 	./main
