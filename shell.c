@@ -30,7 +30,7 @@ void print_cwd() {
   getcwd(cwd, sizeof(cwd));
 
   printf(ANSI_COLOR_GREEN"%s:", user);
-  printf(ANSI_COLOR_BLUE"%s$",cwd );
+  printf(ANSI_COLOR_BLUE"%s$ ",cwd );
   printf(ANSI_COLOR_RESET);
 }
 
@@ -56,5 +56,12 @@ char **sh_parse_line(char *input) {
 }
 
 int sh_run(char **input_args) {
-  return 1;
+  if (!strcmp(input_args[0], "exit")) {
+      return sh_exit();
+  }
+}
+
+int sh_exit() {
+  printf("lsh exited successfully\n");
+  return 0;
 }

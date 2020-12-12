@@ -9,7 +9,6 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-
 void sh_init();
 void sh_loop();
 void print_cwd();
@@ -18,5 +17,6 @@ char *sh_read_line();
 char **sh_parse_line(char *input);
 int sh_run(char **input_args);
 
+int sh_exit();
 
 #endif
