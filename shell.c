@@ -55,9 +55,20 @@ char **sh_parse_line(char *input) {
   return args;
 }
 
+char *sh_cmd_names[] = {
+  "exit"
+};
+
+int (*sh_cmd[]) (char **) = {
+  &sh_exit
+};
+
 int sh_run(char **input_args) {
-  if (!strcmp(input_args[0], "exit")) {
-      return sh_exit();
+  int n = 0;
+  for (n = 0; n < sizeof(sh_cmd_names); n++) {
+    if (!(strcmp(input_args[0], sh_cmd_names[n]))) {
+      return (*sh_cmd[n])(input_args);
+    }
   }
 }
 

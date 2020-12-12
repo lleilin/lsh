@@ -9,6 +9,9 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
+// char *sh_cmd_names[];
+// int (*sh_cmd[]) (char **);
+
 void sh_init();
 void sh_loop();
 void print_cwd();
