@@ -20,6 +20,10 @@ char *sh_read_line();
 char **sh_parse_line(char *input);
 int sh_run(char **input_args);
 
+int option_switch(char **input_args, char *arg);
+
 int sh_exit();
+int sh_ls(char **input_args);
+
 
 #endif
