@@ -8,6 +8,7 @@ Due: TBD
 Github Link: https://github.com/mks65/shell.git
 
 ## TODO
+- fix sh_parse_line to remove multiple spaces
 - Read and separate multiple commands on one line
 - Implement simple redirection
 

@@ -26,6 +26,6 @@ int sh_exit();
 int sh_cd(char **input_args);
 int sh_ls(char **input_args);
 int sh_pwd();
-
+int sh_echo(char **input_args);
 
 #endif

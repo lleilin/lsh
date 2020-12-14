@@ -17,14 +17,16 @@ char *sh_cmd_names[] = {
   "exit",
   "cd",
   "ls",
-  "pwd"
+  "pwd",
+  "echo"
 };
 
 int (*sh_cmd[]) (char **) = {
   &sh_exit,
   &sh_cd,
   &sh_ls,
-  &sh_pwd
+  &sh_pwd,
+  &sh_echo
 };
 
 void sh_init() {
@@ -71,13 +73,18 @@ char *sh_read_line() {
 
 char **sh_parse_line(char *input) {
   int n = strlen(input);
-  char **args = malloc(8 * sizeof(char *));
+  char **args = malloc(8 * sizeof(char*));
+  char *cur_arg;
   char *p = input;
   int i = 0;
-  args[i]= strsep(&p," ");
-  while (args[i]) {
+  cur_arg = strsep(&p," ");
+  while (cur_arg) {
+    while (!strcmp(cur_arg," ")) {
+      cur_arg = strsep(&p, " ");
+    }
     i++;
-    args[i] = strsep(&p," ");
+    args[i] = cur_arg;
+    cur_arg = strsep(&p, " ");
   }
   return args;
 }
@@ -92,6 +99,9 @@ int sh_run(char **input_args) {
         return (*sh_cmd[n])(input_args);
       } else {
         int f = fork();
+
+        printf("%d\n", f);
+
         if (f == 0) {
           return (*sh_cmd[n])(input_args);
         } else if (f < 0) {
@@ -231,4 +241,18 @@ int sh_ls(char **input_args) {
 
 int sh_pwd() {
   printf(ANSI_COLOR_RESET"%s\n", cwd);
+  return 0;
+}
+
+int sh_echo(char **input_args) {
+  int n = 1;
+  while (input_args[n]) {
+    printf("n %s", input_args[n]);
+    if (input_args[n+1]) {
+      printf(" ");
+    }
+    n++;
+  }
+  printf("\n");
+  return 0;
 }
