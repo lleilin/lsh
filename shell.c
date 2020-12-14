@@ -9,10 +9,14 @@
 #include <sys/stat.h>
 #include <time.h>
 
+char pwd[256];
+char cwd[256];
 
 void sh_init() {
   printf("Welcome to lsh \n");
   char *user = getenv("USER");
+  getcwd(pwd, sizeof(pwd));
+  getcwd(cwd, sizeof(cwd));
   printf("USER is: @%s\n", user);
 }
 
@@ -30,13 +34,13 @@ void sh_loop() {
 }
 
 void print_cwd() {
-  char cwd[256];
   char *user = getenv("USER");
   getcwd(cwd, sizeof(cwd));
 
   printf(ANSI_COLOR_GREEN"%s:", user);
-  printf(ANSI_COLOR_BLUE"%s$ ",cwd );
+  printf(ANSI_COLOR_BLUE"%s$ ", cwd);
   printf(ANSI_COLOR_RESET);
+
 }
 
 char *sh_read_line() {
@@ -62,21 +66,25 @@ char **sh_parse_line(char *input) {
 
 char *sh_cmd_names[] = {
   "exit",
-  "ls"
+  "ls",
+  "cd"
 };
 
 int (*sh_cmd[]) (char **) = {
   &sh_exit,
-  &sh_ls
+  &sh_ls,
+  &sh_cd
 };
 
 int sh_run(char **input_args) {
-  int n = 0;
+  int n;
   for (n = 0; n < sizeof(sh_cmd_names); n++) {
     if (!(strcmp(input_args[0], sh_cmd_names[n]))) {
       return (*sh_cmd[n])(input_args);
     }
   }
+  printf("%s: command not found", input_args[0]);
+  return 1;
 }
 
 int sh_exit() {
@@ -168,5 +176,30 @@ int sh_ls(char **input_args) {
         entry = readdir(directory);
         printf(ANSI_COLOR_RESET);
     }
+  return 1;
+}
+
+int sh_cd(char **input_args){
+  char *dir_name;
+
+  if (input_args[1] == NULL) {
+    return 1;
+  }
+
+  if (!strcmp(input_args[1], "-")) {
+    strncpy(dir_name, pwd, sizeof(pwd));
+    printf("%s\n", pwd);
+  } else {
+    dir_name = input_args[1];
+  }
+
+  getcwd(pwd, sizeof(pwd));
+
+  int directory = chdir(dir_name);
+  if (directory) {
+    printf("cd: %s: %s\n", dir_name, strerror(errno));
+  }
+  getcwd(cwd, sizeof(cwd));
+
   return 1;
 }
