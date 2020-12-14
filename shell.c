@@ -12,6 +12,18 @@
 char pwd[256];
 char cwd[256];
 
+char *sh_cmd_names[] = {
+  "exit",
+  "cd",
+  "ls"
+};
+
+int (*sh_cmd[]) (char **) = {
+  &sh_exit,
+  &sh_cd,
+  &sh_ls
+};
+
 void sh_init() {
   printf("Welcome to lsh \n");
   char *user = getenv("USER");
@@ -64,26 +76,21 @@ char **sh_parse_line(char *input) {
   return args;
 }
 
-char *sh_cmd_names[] = {
-  "exit",
-  "ls",
-  "cd"
-};
-
-int (*sh_cmd[]) (char **) = {
-  &sh_exit,
-  &sh_ls,
-  &sh_cd
-};
-
 int sh_run(char **input_args) {
   int n;
-  for (n = 0; n < sizeof(sh_cmd_names); n++) {
+  int num_cmd = sizeof(sh_cmd_names) / sizeof(sh_cmd_names[0]);
+
+  for (n = 0; n < num_cmd - 1; n++) {
     if (!(strcmp(input_args[0], sh_cmd_names[n]))) {
-      return (*sh_cmd[n])(input_args);
+      if (n == 0 || n == 1) {
+        return (*sh_cmd[n])(input_args);
+      } else {
+        int f = fork();
+      }
     }
   }
-  printf("%s: command not found", input_args[0]);
+
+  printf("%s: command not found\n", input_args[0]);
   return 1;
 }
 
