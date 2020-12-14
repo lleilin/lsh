@@ -23,8 +23,9 @@ int sh_run(char **input_args);
 int option_switch(char **input_args, char *arg);
 
 int sh_exit();
-int sh_ls(char **input_args);
 int sh_cd(char **input_args);
+int sh_ls(char **input_args);
+int sh_pwd();
 
 
 #endif

@@ -16,13 +16,15 @@ char cwd[256];
 char *sh_cmd_names[] = {
   "exit",
   "cd",
-  "ls"
+  "ls",
+  "pwd"
 };
 
 int (*sh_cmd[]) (char **) = {
   &sh_exit,
   &sh_cd,
-  &sh_ls
+  &sh_ls,
+  &sh_pwd
 };
 
 void sh_init() {
@@ -225,4 +227,8 @@ int sh_ls(char **input_args) {
     closedir(directory);
 
   return 0;
+}
+
+int sh_pwd() {
+  printf(ANSI_COLOR_RESET"%s\n", cwd);
 }
