@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <dirent.h>
 #include <errno.h>
 #include <sys/types.h>
@@ -80,18 +81,29 @@ int sh_run(char **input_args) {
   int n;
   int num_cmd = sizeof(sh_cmd_names) / sizeof(sh_cmd_names[0]);
 
-  for (n = 0; n < num_cmd - 1; n++) {
+  for (n = 0; n < num_cmd; n++) {
     if (!(strcmp(input_args[0], sh_cmd_names[n]))) {
       if (n == 0 || n == 1) {
         return (*sh_cmd[n])(input_args);
       } else {
         int f = fork();
+        printf("%d\n", f);
+        if (f == 0) {
+          return (*sh_cmd[n])(input_args);
+        } else if (f < 0) {
+          printf("%s: error forking", input_args[0]);
+          return 0;
+        } else {
+          wait(NULL);
+          return 1;
+        }
       }
     }
   }
 
   printf("%s: command not found\n", input_args[0]);
   return 1;
+
 }
 
 int sh_exit() {
@@ -108,6 +120,31 @@ int option_switch(char **input_args, char *arg) {
     n++;
   }
   return 0;
+}
+
+int sh_cd(char **input_args){
+  char *dir_name;
+
+  if (input_args[1] == NULL) {
+    return 1;
+  }
+
+  if (!strcmp(input_args[1], "-")) {
+    strncpy(dir_name, pwd, sizeof(pwd));
+    printf("%s\n", pwd);
+  } else {
+    dir_name = input_args[1];
+  }
+
+  getcwd(pwd, sizeof(pwd));
+
+  int directory = chdir(dir_name);
+  if (directory) {
+    printf("cd: %s: %s\n", dir_name, strerror(errno));
+  }
+  getcwd(cwd, sizeof(cwd));
+
+  return 1;
 }
 
 int sh_ls(char **input_args) {
@@ -183,30 +220,5 @@ int sh_ls(char **input_args) {
         entry = readdir(directory);
         printf(ANSI_COLOR_RESET);
     }
-  return 1;
-}
-
-int sh_cd(char **input_args){
-  char *dir_name;
-
-  if (input_args[1] == NULL) {
-    return 1;
-  }
-
-  if (!strcmp(input_args[1], "-")) {
-    strncpy(dir_name, pwd, sizeof(pwd));
-    printf("%s\n", pwd);
-  } else {
-    dir_name = input_args[1];
-  }
-
-  getcwd(pwd, sizeof(pwd));
-
-  int directory = chdir(dir_name);
-  if (directory) {
-    printf("cd: %s: %s\n", dir_name, strerror(errno));
-  }
-  getcwd(cwd, sizeof(cwd));
-
-  return 1;
+  return 0;
 }
