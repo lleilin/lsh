@@ -43,6 +43,9 @@ void sh_loop() {
     line = sh_read_line();
     args = sh_parse_line(line);
     status = sh_run(args);
+
+    free(line);
+    free(args);
   }
 }
 
@@ -87,7 +90,6 @@ int sh_run(char **input_args) {
         return (*sh_cmd[n])(input_args);
       } else {
         int f = fork();
-        printf("%d\n", f);
         if (f == 0) {
           return (*sh_cmd[n])(input_args);
         } else if (f < 0) {
@@ -220,5 +222,7 @@ int sh_ls(char **input_args) {
         entry = readdir(directory);
         printf(ANSI_COLOR_RESET);
     }
+    closedir(directory);
+
   return 0;
 }
