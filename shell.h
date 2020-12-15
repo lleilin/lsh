@@ -17,8 +17,10 @@ void sh_loop();
 void print_cwd();
 
 char *sh_read_line();
+char **sh_split_line(char *input);
 char **sh_parse_line(char *input);
 int sh_run(char **input_args);
+int sh_run_all(char **input_lines);
 
 int option_switch(char **input_args, char *arg);
 

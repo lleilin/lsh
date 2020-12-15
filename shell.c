@@ -39,17 +39,20 @@ void sh_init() {
 
 void sh_loop() {
   char *line;
-  char **args;
+  char **cmds;
   int status = 1;
 
   while(status) {
     print_cwd();
     line = sh_read_line();
-    args = sh_parse_line(line);
-    status = sh_run(args);
+    cmds = sh_split_line(line);
+    // args = sh_parse_line(cmds);
+    status = sh_run_all(cmds);
 
     free(line);
-    free(args);
+    free(cmds);
+    // free(args);
+
   }
 }
 
@@ -69,6 +72,20 @@ char *sh_read_line() {
   fgets(buffer, sizeof(buffer), stdin);
   strncpy(line, buffer, strlen(buffer) - 1);
   return line;
+}
+
+char **sh_split_line(char *input) {
+  char **cmds = malloc(8 * sizeof(char*));
+  char *p = input;
+  int i = 0;
+
+  cmds[i]=strsep(&p,";");
+  while (cmds[i]) {
+    i++;
+    cmds[i] = strsep(&p,";");
+  }
+
+  return cmds;
 }
 
 char **sh_parse_line(char *input) {
@@ -115,6 +132,19 @@ int sh_run(char **input_args) {
   printf("%s: command not found\n", input_args[0]);
   return 1;
 
+}
+
+int sh_run_all(char **input_lines) {
+  char **args;
+  int i = 0;
+  int status = 1;
+  while (input_lines[i]) {
+    args = sh_parse_line(input_lines[i]);
+    status = sh_run(args);
+    free(args);
+    i++;
+  }
+  return status;
 }
 
 int sh_exit() {
