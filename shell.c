@@ -72,20 +72,17 @@ char *sh_read_line() {
 }
 
 char **sh_parse_line(char *input) {
-  int n = strlen(input);
   char **args = malloc(8 * sizeof(char*));
-  char *cur_arg;
   char *p = input;
   int i = 0;
-  cur_arg = strsep(&p," ");
-  while (cur_arg) {
-    while (!strcmp(cur_arg," ")) {
-      cur_arg = strsep(&p, " ");
+  args[i]=strsep(&p," ");
+  while (args[i]) {
+    if (args[i][0] != 0) {
+      i++;
     }
-    i++;
-    args[i] = cur_arg;
-    cur_arg = strsep(&p, " ");
+    args[i] = strsep(&p," ");
   }
+
   return args;
 }
 
@@ -247,7 +244,7 @@ int sh_pwd() {
 int sh_echo(char **input_args) {
   int n = 1;
   while (input_args[n]) {
-    printf("n %s", input_args[n]);
+    printf("%s", input_args[n]);
     if (input_args[n+1]) {
       printf(" ");
     }
