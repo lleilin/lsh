@@ -61,7 +61,7 @@ void print_cwd() {
   getcwd(cwd, sizeof(cwd));
 
   printf(ANSI_COLOR_GREEN"%s:", user);
-  printf(ANSI_COLOR_BLUE"%s$ ", cwd);
+  printf(ANSI_COLOR_RED"%s$ ", cwd);
   printf(ANSI_COLOR_RESET);
 
 }
@@ -117,7 +117,8 @@ int sh_run(char **input_args) {
         printf("%d\n", f);
 
         if (f == 0) {
-          return (*sh_cmd[n])(input_args);
+          (*sh_cmd[n])(input_args);
+          exit(0);
         } else if (f < 0) {
           printf("%s: error forking", input_args[0]);
           return 0;
@@ -244,18 +245,38 @@ int sh_ls(char **input_args) {
         if (arg_a) {
           if (arg_l) {
               printf(ANSI_COLOR_RESET"%8d %8d %10ld ", file.st_uid, file.st_gid, file.st_size);
-              printf(ANSI_COLOR_GREEN"%20s ",entry->d_name);
+              if (entry->d_type == DT_REG) {
+                printf(ANSI_COLOR_GREEN"%20s ",entry->d_name);
+              }
+              if (entry->d_type == DT_DIR) {
+                printf(ANSI_COLOR_BLUE"%20s ",entry->d_name);
+              }
               printf(ANSI_COLOR_YELLOW"%s",ctime(&(file.st_mtime))) ;
           } else {
-            printf(ANSI_COLOR_GREEN"%s\n", entry->d_name);
+            if (entry->d_type == DT_REG) {
+              printf(ANSI_COLOR_GREEN"%s\n", entry->d_name);
+            }
+            if (entry->d_type == DT_DIR) {
+              printf(ANSI_COLOR_BLUE"%s\n", entry->d_name);
+            }
           }
         } else if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..")) {
             if (arg_l) {
                 printf(ANSI_COLOR_RESET"%8d %8d %10ld ", file.st_uid, file.st_gid, file.st_size);
-                printf(ANSI_COLOR_GREEN"%20s ",entry->d_name);
+                if (entry->d_type == DT_REG) {
+                  printf(ANSI_COLOR_GREEN"%20s ",entry->d_name);
+                }
+                if (entry->d_type == DT_DIR) {
+                  printf(ANSI_COLOR_BLUE"%20s ",entry->d_name);
+                }
                 printf(ANSI_COLOR_YELLOW"%s",ctime(&(file.st_mtime))) ;
             } else {
-              printf(ANSI_COLOR_GREEN"%s\n", entry->d_name);
+              if (entry->d_type == DT_REG) {
+                printf(ANSI_COLOR_GREEN"%s\n", entry->d_name);
+              }
+              if (entry->d_type == DT_DIR) {
+                printf(ANSI_COLOR_BLUE"%s\n", entry->d_name);
+              }
             }
         }
         entry = readdir(directory);

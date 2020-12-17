@@ -8,7 +8,6 @@ Due: TBD
 Github Link: https://github.com/mks65/shell.git
 
 ## TODO
-- Fix issue with multiple commands causing an extra process
 - Read and separate multiple commands on one line
 - Implement simple redirection
 
