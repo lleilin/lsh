@@ -16,16 +16,6 @@
 char pwd[256];
 char cwd[256];
 
-char *sh_cmd_names[] = {
-  "exit",
-  "cd"
-};
-
-int (*sh_cmd[]) (char **) = {
-  &sh_exit,
-  &sh_cd
-};
-
 void sh_init() {
   printf("Welcome to lsh \n");
   char *user = getenv("USER");
