@@ -18,7 +18,8 @@ char *sh_cmd_names[] = {
   "cd",
   "ls",
   "pwd",
-  "echo"
+  "echo",
+  "ps"
 };
 
 int (*sh_cmd[]) (char **) = {
@@ -26,7 +27,8 @@ int (*sh_cmd[]) (char **) = {
   &sh_cd,
   &sh_ls,
   &sh_pwd,
-  &sh_echo
+  &sh_echo,
+  &sh_ps
 };
 
 void sh_init() {
@@ -303,4 +305,16 @@ int sh_echo(char **input_args) {
   }
   printf("\n");
   return 0;
+}
+
+int sh_ps() {
+  pid_t pid = getpid();
+  pid_t ppid = getppid();
+  printf("  PID CMD\n");
+  printf("%5d %-6s\n",pid, "lsh");
+  printf("%5d %-6s\n",pid, "ps");
+}
+
+int sh_wc(char **input_args) {
+
 }
