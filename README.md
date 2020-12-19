@@ -13,5 +13,6 @@ Github Link: https://github.com/mks65/shell.git
 ## Features:
 
 ## Bugs:
+- ending a command in ";" causes a segmentation fault
 
 ## Execution:
