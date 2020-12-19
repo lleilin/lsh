@@ -9,6 +9,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <fcntl.h>
+
+
 
 char pwd[256];
 char cwd[256];
@@ -19,7 +22,8 @@ char *sh_cmd_names[] = {
   "ls",
   "pwd",
   "echo",
-  "ps"
+  "ps",
+  "wc"
 };
 
 int (*sh_cmd[]) (char **) = {
@@ -28,7 +32,8 @@ int (*sh_cmd[]) (char **) = {
   &sh_ls,
   &sh_pwd,
   &sh_echo,
-  &sh_ps
+  &sh_ps,
+  &sh_wc
 };
 
 void sh_init() {
@@ -316,5 +321,48 @@ int sh_ps() {
 }
 
 int sh_wc(char **input_args) {
+  int c;
+  int w;
+  int l;
+  char *buffer;
+
+  if (input_args[1]) {
+    int size;
+
+    int file = open(input_args[1], O_RDONLY);
+    if (file == -1) {
+      printf("wc: %s: %s\n", input_args[1], strerror(errno));
+      return 0;
+    }
+
+    size = lseek(file, 0, SEEK_END);
+    lseek(file, 0, SEEK_SET);
+
+    buffer = calloc(size + 1, sizeof(char));
+    int d = read(file, buffer, size);
+    close(file);
+  } else {
+    buffer = sh_read_line();
+  }
+
+  int i;
+  for (i = 0; buffer[i] != '\0'; i++) {
+    if (buffer[i]) {
+      c++;
+    }
+    if (buffer[i] == ' ' && buffer[i + 1] != ' ') {
+      w++;
+    }
+    if (buffer[i] == '\n') {
+      l++;
+    }
+  }
+  free(buffer);
+  printf("%d\t%d\t%d", l, w, c);
+  if (input_args[1]) {
+    printf("\t%s\n", input_args[1]);
+  } else {
+    printf("\n");
+  }
 
 }
