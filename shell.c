@@ -137,7 +137,18 @@ int sh_run(char **input_args) {
     }
   }
 
-  printf("%s: command not found\n", input_args[0]);
+  int f = fork();
+  if (f == 0) {
+    execvp(input_args[0], input_args);
+    exit(0);
+  } else if (f < 0) {
+    printf("%s: error forking", input_args[0]);
+    return 0;
+  } else {
+    wait(NULL);
+    return 1;
+  }
+
   return 1;
 
 }
