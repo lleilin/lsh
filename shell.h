@@ -17,10 +17,16 @@ void sh_loop();
 void print_cwd();
 
 char *sh_read_line();
-char **sh_split_line(char *input);
-char **sh_parse_line(char *input);
-int sh_run(char **input_args);
-int sh_run_all(char **input_lines);
+char *fix_command(char *line_input);
+char **splitline(char *input_line);
+int run_command(char *command_input);
+int run_args(char **args);
+int run_all(char **commands);
+
+void redirin(char *fd);
+void redirout(char *fd);
+void redirapp(char *fd);
+void piping(char *args[]);
 
 int sh_exit();
 int sh_cd(char **input_args);
